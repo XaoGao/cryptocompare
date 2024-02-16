@@ -7,13 +7,12 @@ module Cryptocompare
         def single_symbol_price(fsym:, tsyms:, options: {}, headers: {})
           check_params(fsym:, tsyms:)
 
-          api_key = options.delete(:api_key)
-          headers["Authorization"] = "Apikey #{api_key}" unless api_key.nil?
-
           query_params = create_query_params(options:) do |o|
             o[:fsym] = fsym
             o[:tsyms] = tsyms.join(",")
           end
+
+          apikey_to_headers(query_params:, headers:)
 
           Cryptocompare::ApiMethod::FaradayFactory.create(query_params:, headers:).get("/data/price")
         end

@@ -2,6 +2,7 @@ module Cryptocompare
   class Client
     extend Configuration
     include Cryptocompare::ApiMethod::Price::SingleSymbolPrice
+    include Cryptocompare::ApiMethod::Price::MultipleSymbolsPrice
 
     @@instance ||= new
 

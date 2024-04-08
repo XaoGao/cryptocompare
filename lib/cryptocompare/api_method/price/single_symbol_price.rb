@@ -5,16 +5,19 @@ module Cryptocompare
         include Cryptocompare::ApiMethod::Base
 
         def single_symbol_price(fsym:, tsyms:, options: {}, headers: {})
-          check_params(fsym:, tsyms:)
+          SingleSymbolPrice.instance_method(:check_params).bind(self).call(fsym:, tsyms:)
 
-          query_params = create_query_params(options:) do |o|
+          filtered_options = options.filter do |k, _|
+            SingleSymbolPrice.instance_method(:avaliable_params).bind(self).call.include? k
+          end
+          query_params = create_query_params(options: filtered_options) do |o|
             o[:fsym] = fsym
             o[:tsyms] = tsyms.join(",")
           end
 
           apikey_to_headers(query_params:, headers:)
 
-          Cryptocompare::ApiMethod::FaradayFactory.create(query_params:, headers:).get("/data/price")
+          FaradayFactory.create(query_params:, headers:).get("/data/price")
         end
 
         private

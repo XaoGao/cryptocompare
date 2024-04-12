@@ -4,7 +4,7 @@ module Cryptocompare
 
     module Base
       def create_query_params(options:)
-        query_params = options
+        query_params = options.dup
         yield query_params
         query_params.transform_keys_to_camel_case
       end

@@ -119,6 +119,7 @@ response = client.multiple_symbol_price(fsyms: ["BTC", "ETH"], tsyms: ["USD", "E
 #### Historical
 
 ##### daily_pair_ohlcv
+Get open, high, low, close, volumefrom and volumeto from the daily historical data. The values are based on 00:00 GMT time. If e=CCCAGG and tryConversion=true, it attempts conversion through BTC or ETH to determine the best possible path. The conversion type and symbol used are appended per historical point. If you want to get all the available historical data, you can use limit=2000 and keep going back in time using the toTs param. You can then keep requesting batches using: &limit=2000&toTs={the earliest timestamp received}.
 
 ###### Params
 * **fsym *string* Required**

@@ -14,8 +14,12 @@ RSpec.describe Cryptocompare::Client do
       expect(client.methods).to include(:single_symbol_price)
     end
 
-    it "single_symbol_price" do
-      expect(client.methods).to include(:single_symbol_price)
+    it "multiple_symbols_price" do
+      expect(client.methods).to include(:multiple_symbols_price)
+    end
+
+    it "multiple_symbols_full_data" do
+      expect(client.methods).to include(:multiple_symbols_full_data)
     end
 
     it "daily_pair_ohlcv" do

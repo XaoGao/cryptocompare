@@ -7,8 +7,9 @@ module Cryptocompare
         def multiple_symbols_price(fsyms:, tsyms:, options: {}, headers: {})
           MultipleSymbolsPrice.instance_method(:check_params).bind(self).call(fsyms:, tsyms:)
 
+          avaliable_keys = MultipleSymbolsPrice.instance_method(:avaliable_params).bind(self).call
           filtered_options = options.filter do |k, _|
-            MultipleSymbolsPrice.instance_method(:avaliable_params).bind(self).call.include? k
+            avaliable_keys.include? k
           end
           query_params = create_query_params(options: filtered_options) do |o|
             o[:fsyms] = fsyms.join(",")

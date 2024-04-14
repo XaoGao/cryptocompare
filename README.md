@@ -18,10 +18,13 @@ See documentation: [API docs](https://min-api.cryptocompare.com/documentation).
                 - [multiple_symbol_price](#multiple_symbol_price)
                     - [Params](#params-1)
                     - [Options](#options-1)
-            - [Historical](#historical)
-                - [daily_pair_ohlcv](#daily_pair_ohlcv)
+                - [multiple_symbol_full_data](#multiple_symbol_full_data)
                     - [Params](#params-2)
                     - [Options](#options-2)
+            - [Historical](#historical)
+                - [daily_pair_ohlcv](#daily_pair_ohlcv)
+                    - [Params](#params-3)
+                    - [Options](#options-3)
     - [Middleware](#middleware)
     - [Contributing](#contributing)
 
@@ -89,7 +92,6 @@ To get the data, you need to call the method:
 response = client.single_symbol_price(fsym: "BTC", tsyms: ["ETH", "USD"])
 ```
 
-
 ##### multiple_symbol_price
 Multiple Symbol Price. Same as single API path but with multiple from symbols.
 
@@ -114,6 +116,33 @@ If set to true, the server will sign the requests (by default we don't sign them
 To get the data, you need to call the method:
 ```ruby
 response = client.multiple_symbol_price(fsyms: ["BTC", "ETH"], tsyms: ["USD", "EUR"])
+```
+
+##### multiple_symbol_full_data
+Get all the current trading info (price, vol, open, high, low etc) of any list of cryptocurrencies in any other currency that you need. If the crypto does not trade directly into the toSymbol requested, BTC will be used for conversion.
+This API also returns Display values for all the fields. If the opposite pair trades we invert it (e.g. BTC-XMR)
+
+###### Params
+* **fsyms *string* Required**
+Comma separated cryptocurrency symbols list [ Min length - 1] [ Max length - 1000]
+* **tsyms *array by string* Required**
+Comma separated cryptocurrency symbols list to convert into [ Min length - 1] [ Max length - 100]
+
+###### Options
+1. **try_conversion *boolean***
+If set to false, it will try to get only direct trading values. This parameter is only valid for e=CCCAGG value [ Default - **true**]
+2. **relaxed_validation *boolean***
+Setting this to true will make sure you don't get an error on non trading pairs, they will just be filtered out of the response. [ Default - **true**]
+3. **e *string***
+The exchange to obtain data from [ Min length - 2] [ Max length - 30] [ Default - **cccagg_or_exchange**]
+4. **extra_params *string***
+The name of your application (we recommend you send it) [ Min length - 1] [ Max length - 2000] [ Default - **NotAvailable**]
+5. **sign *boolean***
+If set to true, the server will sign the requests (by default we don't sign them), this is useful for usage in smart contracts [ Default - **false**]
+
+To get the data, you need to call the method:
+```ruby
+response = client.multiple_symbol_full_data(fsyms: ["BTC", "ETH"], tsyms: ["USD", "EUR"])
 ```
 
 #### Historical

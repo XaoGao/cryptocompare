@@ -7,9 +7,11 @@ module Cryptocompare
         def daily_pair_ohlcv(fsym:, tsym:, options: {}, headers: {})
           DailyPairOhlcv.instance_method(:check_params).bind(self).call(fsym:, tsym:)
 
+          avaliable_keys = DailyPairOhlcv.instance_method(:avaliable_params).bind(self).call
           filtered_options = options.filter do |k, _|
-            DailyPairOhlcv.instance_method(:avaliable_params).bind(self).call.include? k
+            avaliable_keys.include? k
           end
+
           query_params = create_query_params(options: filtered_options) do |o|
             o[:fsym] = fsym
             o[:tsym] = tsym

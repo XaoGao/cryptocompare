@@ -1,25 +1,25 @@
 module Cryptocompare
   module ApiMethod
     module Price
-      module SingleSymbolPrice
+      module MultipleSymbolsFullData
         include Cryptocompare::ApiMethod::Base
 
-        def single_symbol_price(fsym:, tsyms:, options: {}, headers: {})
-          SingleSymbolPrice.instance_method(:check_params).bind(self).call(fsym:, tsyms:)
+        def multiple_symbols_full_data(fsyms:, tsyms:, options: {}, headers: {})
+          MultipleSymbolsFullData.instance_method(:check_params).bind(self).call(fsyms:, tsyms:)
 
-          avaliable_keys = SingleSymbolPrice.instance_method(:avaliable_params).bind(self).call
+          avaliable_key = MultipleSymbolsFullData.instance_method(:avaliable_params).bind(self).call
           filtered_options = options.filter do |k, _|
-            avaliable_keys.include? k
+            avaliable_key.include? k
           end
 
           query_params = create_query_params(options: filtered_options) do |o|
-            o[:fsym] = fsym
+            o[:fsyms] = fsyms.join(",")
             o[:tsyms] = tsyms.join(",")
           end
 
           apikey_to_headers(query_params:, headers:)
 
-          FaradayFactory.create(query_params:, headers:).get("/data/price")
+          FaradayFactory.create(query_params:, headers:).get("/data/pricemultifull")
         end
 
         private
@@ -28,8 +28,8 @@ module Cryptocompare
           %i[try_conversion relaxed_validation e extra_params sign]
         end
 
-        def check_params(fsym:, tsyms:)
-          raise StandardError "fsym can not be nil" if fsym.nil?
+        def check_params(fsyms:, tsyms:)
+          raise StandardError "fsyms must be hash and can not be empty" if fsyms.class != Array || fsyms.empty?
           raise StandardError "tsyms must be hash and can not be empty" if tsyms.class != Array || tsyms.empty?
         end
       end

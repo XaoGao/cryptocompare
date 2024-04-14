@@ -4,6 +4,7 @@ module Cryptocompare
 
     include Cryptocompare::ApiMethod::Price::SingleSymbolPrice
     include Cryptocompare::ApiMethod::Price::MultipleSymbolsPrice
+    include Cryptocompare::ApiMethod::Price::MultipleSymbolsFullData
     include Cryptocompare::ApiMethod::Historical::DailyPairOhlcv
 
     @@instance ||= new

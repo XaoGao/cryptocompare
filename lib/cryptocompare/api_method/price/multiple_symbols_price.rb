@@ -7,10 +7,8 @@ module Cryptocompare
         def multiple_symbols_price(fsyms:, tsyms:, options: {}, headers: {})
           MultipleSymbolsPrice.instance_method(:check_params).bind(self).call(fsyms:, tsyms:)
 
-          avaliable_keys = MultipleSymbolsPrice.instance_method(:avaliable_params).bind(self).call
-          filtered_options = options.filter do |k, _|
-            avaliable_keys.include? k
-          end
+          filtered_options = filter_options(options:)
+
           query_params = create_query_params(options: filtered_options) do |o|
             o[:fsyms] = fsyms.join(",")
             o[:tsyms] = tsyms.join(",")
@@ -25,6 +23,11 @@ module Cryptocompare
 
         def avaliable_params
           %i[try_conversion relaxed_validation e extra_params sign]
+        end
+
+        def filter_options(options:)
+          avaliable_keys = MultipleSymbolsPrice.instance_method(:avaliable_params).bind(self).call
+          options.filter { |k, _| avaliable_keys.include? k }
         end
 
         def check_params(fsyms:, tsyms:)

@@ -10,20 +10,11 @@ RSpec.describe Cryptocompare::Client do
   describe "have methods" do
     let(:client) { Cryptocompare::Client.new }
 
-    it "single_symbol_price" do
-      expect(client.methods).to include(:single_symbol_price)
-    end
+    it { expect(client.methods).to include(:single_symbol_price) }
+    it { expect(client.methods).to include(:multiple_symbols_price) }
+    it { expect(client.methods).to include(:multiple_symbols_full_data) }
 
-    it "multiple_symbols_price" do
-      expect(client.methods).to include(:multiple_symbols_price)
-    end
-
-    it "multiple_symbols_full_data" do
-      expect(client.methods).to include(:multiple_symbols_full_data)
-    end
-
-    it "daily_pair_ohlcv" do
-      expect(client.methods).to include(:daily_pair_ohlcv)
-    end
+    it { expect(client.methods).to include(:daily_pair_ohlcv) }
+    it { expect(client.methods).to include(:hourly_pair_ohlcv) }
   end
 end

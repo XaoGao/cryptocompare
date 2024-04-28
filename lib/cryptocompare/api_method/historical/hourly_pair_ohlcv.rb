@@ -1,21 +1,21 @@
 module Cryptocompare
   module ApiMethod
     module Historical
-      module DailyPairOhlcv
+      module HourlyPairOhlcv
         include ApiMethod::Base
 
-        def daily_pair_ohlcv(fsym:, tsym:, options: {}, headers: {})
-          DailyPairOhlcv.instance_method(:check_params).bind(self).call(fsym:, tsym:)
+        def hourly_pair_ohlcv(fsym:, tsym:, options: {}, headers: {})
+          HourlyPairOhlcv.instance_method(:check_params).bind(self).call(fsym:, tsym:)
 
           filtered_options = filter_options(options:)
-
           query_params = create_query_params(options: filtered_options) do |o|
             o[:fsym] = fsym
             o[:tsym] = tsym
           end
 
           apikey_to_headers(query_params:, headers:)
-          FaradayFactory.create(query_params:, headers:).get("/data/v2/histoday")
+
+          FaradayFactory.create(query_params:, headers:).get("/data/v2/histohour")
         end
 
         private
@@ -26,7 +26,7 @@ module Cryptocompare
         end
 
         def filter_options(options:)
-          avaliable_keys = DailyPairOhlcv.instance_method(:avaliable_params).bind(self).call
+          avaliable_keys = HourlyPairOhlcv.instance_method(:avaliable_params).bind(self).call
           options.filter { |k, _| avaliable_keys.include? k }
         end
 

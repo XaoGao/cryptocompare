@@ -185,6 +185,43 @@ To get the data, you need to call the method:
 response = client.daily_pair_ohlcv(fsym: "BTC", tsym: "USD", options: { limit: 1 })
 ```
 
+##### hourly_pair_ohlcv
+Get open, high, low, close, volumefrom and volumeto from the hourly historical data. If e=CCCAGG and tryConversion=true, it attempts conversion through BTC or ETH to determine the best possible path. The conversion type and symbol used are appended per historical point. If you want to get all the available historical data, you can use limit=2000 and keep going back in time using the toTs parameter. You can then keep requesting batches using: &limit=2000&toTs={the earliest timestamp received}.
+
+###### Params
+* **fsym *string* Required**
+The cryptocurrency symbol of interest [ Min length - 1] [ Max length - 30]
+* **tsym *array by string* Required**
+The currency symbol to convert into [ Min length - 1] [ Max length - 30]
+
+###### Options
+1. **try_conversion *boolean***
+If set to false, it will try to get only direct trading values. This parameter is only valid for e=CCCAGG value [ Default - **true**]
+2. **relaxed_validation *boolean***
+Setting this to true will make sure you don't get an error on non trading pairs, they will just be filtered out of the response. [ Default - **true**]
+3. **e *string***
+The exchange to obtain data from [ Min length - 2] [ Max length - 30] [ Default - **cccagg_or_exchange**]
+4. **aggregate *int***
+Time period to aggregate the data over (for daily it's days, for hourly it's hours and for minute histo it's minutes) [ Min - 1] [ Max - 30] [ **Default** - 1]
+5. **aggregate_predictable_time_periods *boolean***
+Only used when the aggregate param is also in use. If false it will aggregate based on the current time.If the param is false and the time you make the call is 1pm - 2pm, with aggregate 2, it will create the time slots: ... 9am, 11am, 1pm.If the param is false and the time you make the call is 2pm - 3pm, with aggregate 2, it will create the time slots: ... 10am, 12am, 2pm.If the param is true (default) and the time you make the call is 1pm - 2pm, with aggregate 2, it will create the time slots: ... 8am, 10am, 12pm.If the param is true (default) and the time you make the call is 2pm - 3pm, with aggregate 2, it will create the time slots: ... 10am, 12am, 2pm. [ Default - **true**]
+6. **limit *int***
+The number of data points to return. If limit * aggregate > 2000 we reduce the limit param on our side. So a limit of 1000 and an aggerate of 4 would only return 2000 (max points) / 4 (aggregation size) = 500 total points + current one so 501. [ Min - 1] [ Max - 2000] [ Default - **30**]
+7. **to_ts *timestamp***
+Returns historical data before that timestamp. If you want to get all the available historical data, you can use limit=2000 and keep going back in time using the toTs param. You can then keep requesting batches using: &limit=2000&toTs={the earliest timestamp received}
+8. **explain_path *boolean***
+If set to true, each point calculated will return the available options it used to make the calculation path decision. This is intended for calculation verification purposes, please note that manually recalculating the returned data point values from this data may not match exactly, this is due to levels of caching in some circumstances. [ Default - **false**]
+9. **extra_params *string***
+The name of your application (we recommend you send it) [ Min length - 1] [ Max length - 2000] [ Default - **NotAvailable**]
+10. **sign *boolean***
+If set to true, the server will sign the requests (by default we don't sign them), this is useful for usage in smart contracts [ Default - **false**]
+
+To get the data, you need to call the method:
+```ruby
+response = client.hourly_pair_ohlcv(fsym: "BTC", tsym: "USD", options: { limit: 1 })
+```
+
+
 ## Middleware
 Gem use a faraday for http request, you can set middleaware, example:
 ```ruby
